@@ -7,3 +7,8 @@ This program will help you to make commits usigng good semantic, helpsyputo orga
 2. command : npx ivcommit-cli@latest
 3. enjoy 
 
+
+
+
+https://user-images.githubusercontent.com/111618970/222657215-d3a5c2ad-0ceb-4d62-8b7a-d51d5cfa7da6.mp4
+
