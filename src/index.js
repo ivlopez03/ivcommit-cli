@@ -16,37 +16,38 @@ const stagedFiles = await getStagedFiles()
 const changedFiles = await getChangedFiles()
 
 
-try {
-    if (changedFiles.length > 0 || stagedFiles.length > 0) {
-        if (stagedFiles.length === 0 && changedFiles.length > 0){
-            const files = await multiselect({
-                message: colors.magenta('Selecciona los ficheros que quieres añadir al commit: '),
-                options: changedFiles.map(file => ({
-                    value: file,
-                    label: file
-                }))
-            })
 
-            if (isCancel(files)) {
-                outro(colors.yellow('Se ha cancelado el commit'))
-                process.exit(0)
-            }
+if (changedFiles.length > 0 || stagedFiles.length > 0) {
+    if (stagedFiles.length === 0 && changedFiles.length > 0){
+        const files = await multiselect({
+            message: colors.magenta('Selecciona los ficheros que quieres añadir al commit: '),
+            options: changedFiles.map(file => ({
+                value: file,
+                label: file
+            }))
+        })
 
-
-            await gitAdd({ files })
-        }else{
-
-            const stagedTableFiles = Array.from(stagedFiles, x => [x])
-            console.log(colors.magenta(`${colors.yellow(stagedFiles.length)} fichero en el stage. Procede a realizar el commit`))
-            console.table(stagedTableFiles)
+        if (isCancel(files)) {
+            outro(colors.yellow('Se ha cancelado el commit'))
+            process.exit(0)
         }
+
+
+        await gitAdd({ files })
+    }else{
+
+        const stagedTableFiles = Array.from(stagedFiles, x => [x])
+        console.log(colors.magenta(`${colors.yellow(stagedFiles.length)} fichero en el stage. Procede a realizar el commit`))
+        console.table(stagedTableFiles)
     }
-    
-} catch {
+
+}else{
     outro(colors.red('Error: comprueba que estas en un reporsitorio de git '))
     process.exit(1)
-    
 }
+    
+    
+
 
 
 const commitType = await select({

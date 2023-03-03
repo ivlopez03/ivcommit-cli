@@ -1,6 +1,6 @@
 {
   "name": "ivcommit-cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Help you to create commit easier. commit CLI",
   "type": "module",
   "bin": {
