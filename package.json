@@ -1,5 +1,5 @@
 {
-  "name": "node-cli",
+  "name": "ivcommit-cli",
   "version": "1.0.0",
   "description": "Help you to create commit easier. commit CLI",
   "type": "module",
