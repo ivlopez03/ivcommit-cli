@@ -6,7 +6,7 @@ export const COMMIT_TYPES = {
     },
     fix: {
         emoji: '🐛',
-        description:'Submit a fix tp bug',
+        description:'Submit a fix to bug',
         release: true     
     },
     performance: {
