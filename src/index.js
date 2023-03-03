@@ -42,7 +42,7 @@ try {
         }
     }
     
-} catch (error) {
+} catch {
     outro(colors.red('Error: comprueba que estas en un reporsitorio de git '))
     process.exit(1)
     
