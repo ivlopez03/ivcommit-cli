@@ -1,4 +1,4 @@
-import  {intro,outro,text,select,confirm,multiselect} from '@clack/prompts'
+import  {intro,outro,text,select,confirm,multiselect,isCancel} from '@clack/prompts'
 import {COMMIT_TYPES} from '../src/commits-types.js'
 import colors from 'picocolors'
 import { getChangedFiles, getStagedFiles, gitCommit,gitAdd} from './git.js'
@@ -26,6 +26,13 @@ try {
                     label: file
                 }))
             })
+
+            if (isCancel(files)) {
+                outro(colors.yellow('Se ha cancelado el commit'))
+                process.exit(0)
+            }
+
+
             await gitAdd({ files })
         }else{
 
@@ -48,29 +55,47 @@ const commitType = await select({
         value: key,
         label:`${value.emoji}  ${key.padEnd(12, ' ')} · ${value.description}`
     }))
-
 })
 
-
+if (isCancel(commitType)) {
+    outro(colors.yellow('Se ha cancelado el commit'))
+    process.exit(0)
+}
 
 
 const commitMsg = await text({
-    message: colors.magenta('Introduce el mensaje del commit:')
+    message: colors.magenta('Introduce el mensaje del commit:'),
+    validate: (value) => {
+        if (value.length === 0) {
+            return colors.red('El mensaje no puede estar vacio')
+        }
+
+        if (value.length > 60) {
+            return colors.red('El mensaje no puede contener mas de 60 caracteres')
+        }
+    }
 })
 
 const {emoji,release} = COMMIT_TYPES[commitType]
+
+if (isCancel(commitMsg)) {
+    outro(colors.yellow('Se ha cancelado el commit'))
+    process.exit(0)
+}
+
 
 let breakingChange = false
 if (release) {
     breakingChange = await confirm({
         initialValue: false,
-        message: colors.magenta(`¿Tiene este commit cambios querompen la compatibilidad anterior?
+        message: colors.magenta(`¿Tiene este commit cambios que rompen la compatibilidad anterior?
 ${colors.gray('Si la respuesta es si, deberias crear un commit con el tipo "BREAKING CHANGE" y al hacer release se publicara una version major')}`)
     })
 }
 
 let commit = `${emoji} ${commitType}: ${commitMsg}`
 commit = breakingChange ? `${commit} [breaking change]` : commit
+
 
 const shouldContinue = await confirm({
     message: colors.magenta( `¿Quiere crear el commit con el siguiente mensaje? 
