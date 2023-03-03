@@ -14,34 +14,32 @@ intro(
 
 const stagedFiles = await getStagedFiles()
 const changedFiles = await getChangedFiles()
-console.log(stagedFiles.length)
-console.log(stagedFiles)
-console.log(changedFiles)
-console.log(changedFiles.length)
 
-if (stagedFiles.length >= 0 && changedFiles.length > 0){
-    const files = await multiselect({
-        message: colors.magenta('Selecciona los ficheros que quieres añadir al commit: '),
-        options: changedFiles.map(file => ({
-            value: file,
-            label: file
-        }))
-    })
-    await gitAdd({ files })
-}else{
-    console.log(colors.magenta('0 ficheros para agregar al stage, ya existen ficheros en el stage, procede a realizar un commit'))
-    console.log(stagedFiles)
+
+try {
+    if (changedFiles.length > 0 || stagedFiles.length > 0) {
+        if (stagedFiles.length === 0 && changedFiles.length > 0){
+            const files = await multiselect({
+                message: colors.magenta('Selecciona los ficheros que quieres añadir al commit: '),
+                options: changedFiles.map(file => ({
+                    value: file,
+                    label: file
+                }))
+            })
+            await gitAdd({ files })
+        }else{
+
+            const stagedTableFiles = Array.from(stagedFiles, x => [x])
+            console.log(colors.magenta(`${colors.yellow(stagedFiles.length)} fichero en el stage. Procede a realizar el commit`))
+            console.table(stagedTableFiles)
+        }
+    }
+    
+} catch (error) {
+    outro(colors.red('Error: comprueba que estas en un reporsitorio de git '))
+    process.exit(1)
+    
 }
-
-
-
-//try {
-   // console.log(changedFiles)
-//}catch(err) {
-     //   outro('Error: comprueba que estas en un reporsitorio de git ')
-     //   process.exit(1)
-//}
-
 
 
 const commitType = await select({
