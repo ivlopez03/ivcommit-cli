@@ -1,10 +1,10 @@
 {
   "name": "ivcommit-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Help you to create commit easier. commit CLI",
   "type": "module",
   "bin": {
-    "ivcommit":"./src/index.js"
+    "ivcommit":"./src/bin.js"
   },
   "main": "index.js",
   "scripts": {
